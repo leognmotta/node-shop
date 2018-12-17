@@ -1,28 +1,38 @@
+// Require built-in node functionality
 const path = require('path');
 
+// Require Third part packages
 const express = require('express');
 const bodyParser = require('body-parser');
 
+// Require Controllers
+const errorController = require('./controllers/error');
+
+// Require utilities
 const rootDir = require('./util/path');
 
+// Creates express app
 const app = express();
 
+// Set template engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-const adminData = require('./routes/admin');
+// Require routes
+const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
+// Third Part Set UP
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(rootDir, 'public')));
 
-app.use('/admin', adminData.routes);
+// Middlewares
+app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 
-app.use('/', (req, res, next) => {
-  res.status(404).render('not_found', { pageTitle: 'Page Not Found' });
-});
+app.use('/', errorController.get404Page);
 
-app.listen(4000, () => {
-  console.log('http://localhost:8000');
+// Starts the server
+app.listen(3000, () => {
+  console.log('http://localhost:3000');
 });
