@@ -1,1 +1,23 @@
-[{"title":"A book","imageUrl":"https://intreeweek.nl/wp-content/uploads/2018/05/dgdzhbdbnghqvvogxw8biu7o_6-750x400.jpg","description":"This is an awesome book!","price":"19"},{"title":"Pencil","imageUrl":"https://elvisswiftdrygoods.com/wp-content/uploads/613_Pencils_3.png","description":"Awesome pencil with eraser!!","price":"1.99"}]
+[
+  {
+    "title": "Pencil",
+    "imageUrl": "https://www.staples-3p.com/s7/is/image/Staples/s0265048_sc7?$splssku$",
+    "description": "Pencil with eraser!!!",
+    "price": "1.99",
+    "id": "0.3123953023136694"
+  },
+  {
+    "title": "Book",
+    "imageUrl": "https://intreeweek.nl/wp-content/uploads/2018/05/dgdzhbdbnghqvvogxw8biu7o_6-750x400.jpg",
+    "description": "Awesome Book!!!",
+    "price": "29.99",
+    "id": "0.5693810182439689"
+  },
+  {
+    "title": "Smartphone",
+    "imageUrl": "https://i.zst.com.br/images/smartphone-samsung-galaxy-j6-sm-j600g-tv-digital-32gb-13-0-mp-2-chips-android-8-0-oreo-3g-4g-wi-fi-photo533290837-12-32-9.jpg",
+    "description": "Awesome Smartphone!!",
+    "price": "1999.99",
+    "id": "0.7550259524493976"
+  }
+]
