@@ -49,6 +49,15 @@ module.exports = class Product {
     });
   }
 
+  static deleteByid(id) {
+    getProductsFromFile(products => {
+      const updatedProducts = products.filter(prod => prod.id !== id);
+      fs.writeFile(productsPath, JSON.stringify(updatedProducts), err => {
+        console.log(`getProductsFromFile error: ${err}`);
+      });
+    });
+  }
+
   static fetchAll(cb) {
     getProductsFromFile(cb);
   }
