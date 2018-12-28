@@ -48,7 +48,7 @@ app.use('/', errorController.get404Page);
 
 mongoose
   .connect(
-    'mongodb+srv://leomotta121:db386486@cluster0-sud5s.mongodb.net/shop?retryWrites=true',
+    '',
     { useNewUrlParser: true }
   )
   .then(result => {
