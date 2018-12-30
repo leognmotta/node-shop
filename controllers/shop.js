@@ -7,7 +7,8 @@ exports.getProducts = (req, res, next) => {
       res.render('shop/product-list', {
         prods: products,
         pageTitle: 'All Products',
-        path: '/products'
+        path: '/products',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => {
@@ -22,7 +23,8 @@ exports.getProduct = (req, res, next) => {
       res.render('shop/product-detail', {
         product: product,
         pageTitle: product.title,
-        path: '/products'
+        path: '/products',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => {
@@ -36,7 +38,8 @@ exports.getIndex = (req, res, next) => {
       res.render('shop/index', {
         prods: products,
         pageTitle: 'Shop',
-        path: '/'
+        path: '/',
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => {
@@ -45,18 +48,28 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  req.user
-    .populate('cart.items.productId')
-    .execPopulate()
-    .then(user => {
-      const products = user.cart.items;
-      res.render('shop/cart', {
-        path: '/cart',
-        pageTitle: 'Your Cart',
-        products: products
-      });
-    })
-    .catch(err => console.log(err));
+  Product.find((err, products) => {
+    const prodList = products.map(i => i._id.toString());
+    const cartItems = req.user.cart.items;
+    const updatedCart = cartItems.filter(item =>
+      prodList.toString().includes(item.productId.toString())
+    );
+    req.user.updateCart(updatedCart, () => {
+      req.user
+        .populate('cart.items.productId')
+        .execPopulate()
+        .then(user => {
+          const prods = user.cart.items;
+          res.render('shop/cart', {
+            path: '/cart',
+            pageTitle: 'Your Cart',
+            products: prods,
+            isAuthenticated: req.session.isLoggedIn
+          });
+        })
+        .catch(err => console.log(err));
+    });
+  });
 };
 
 exports.postCart = (req, res, next) => {
@@ -88,8 +101,8 @@ exports.postOrder = (req, res, next) => {
       });
       const order = new Order({
         user: {
-          name: req.user.name,
-          userId: req.user
+          email: req.session.user.email,
+          userId: req.session.user
         },
         products: products
       });
@@ -105,12 +118,13 @@ exports.postOrder = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  Order.find({ 'user.userId': req.user._id })
+  Order.find({ 'user.userId': req.session.user._id })
     .then(orders => {
       res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Your Orders',
-        orders: orders
+        orders: orders,
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
