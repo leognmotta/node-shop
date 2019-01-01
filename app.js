@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf');
+const flash = require('connect-flash');
 
 // Require Controllers
 const errorController = require('./controllers/error');
@@ -16,9 +18,9 @@ const User = require('./models/user');
 
 // Require utilities
 const rootDir = require('./util/path');
+const links = require('./util/uri');
 
-const MONGODB_URI =
-  'mongodb+srv://leomotta121:db686330@cluster0-sud5s.mongodb.net/shop?retryWrites=true';
+const MONGODB_URI = links.databaseUri;
 
 // Creates express app
 const app = express();
@@ -26,6 +28,7 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 });
+const csrfProtection = csrf();
 
 // Set template engine
 app.set('view engine', 'ejs');
@@ -47,6 +50,8 @@ app.use(
     store: store
   })
 );
+app.use(csrfProtection);
+app.use(flash());
 
 // Middlewares
 app.use((req, res, next) => {
@@ -59,6 +64,12 @@ app.use((req, res, next) => {
       next();
     })
     .catch(err => console.log(err));
+});
+
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
 });
 
 app.use('/admin', adminRoutes);
