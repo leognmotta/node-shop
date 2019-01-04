@@ -17,7 +17,6 @@ router.post(
       .isString()
       .isLength({ min: 3 })
       .trim(),
-    body('imageUrl', 'Image most be valid url.').isURL(),
     body('price', 'Please enter a decimal value "0.00" ').isCurrency({
       require_decimal: true,
       digits_after_decimal: [2]
@@ -39,7 +38,6 @@ router.post(
       .isString()
       .isLength({ min: 3 })
       .trim(),
-    body('imageUrl', 'Image most be valid url.').isURL(),
     body('price', 'Please enter a decimal value "0.00" ').isCurrency({
       require_decimal: true,
       digits_after_decimal: [2]
@@ -52,6 +50,6 @@ router.post(
   adminController.postEditProduct
 );
 
-router.post('/delete-product', isAuth, adminController.postDeleteProduct);
+router.delete('/product/:productId', isAuth, adminController.deleteProduct);
 
 module.exports = router;
